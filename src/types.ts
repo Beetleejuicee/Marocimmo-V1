@@ -68,6 +68,8 @@ export interface ListingFilters {
   minPrice?: number;
   maxPrice?: number;
   minBedrooms?: number;
+  minBathrooms?: number;
   minSurface?: number;
+  maxSurface?: number;
   query?: string;
 }

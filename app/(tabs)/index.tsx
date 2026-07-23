@@ -6,7 +6,7 @@ import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import ListingCard from '../../src/components/ListingCard';
 import { cities, listings } from '../../src/data/listings';
 import { useLanguage } from '../../src/i18n/LanguageContext';
-import { colors, radius, spacing } from '../../src/theme';
+import { colors, fonts, radius, spacing } from '../../src/theme';
 
 export default function HomeScreen() {
   const router = useRouter();
@@ -23,14 +23,14 @@ export default function HomeScreen() {
         <Text style={styles.heroTitle}>{t.tagline}</Text>
         <View style={styles.heroButtons}>
           <Pressable style={styles.heroButton} onPress={() => router.push('/buy')}>
-            <Ionicons name="key-outline" size={18} color="#fff" />
+            <Ionicons name="key-outline" size={18} color={colors.dark} />
             <Text style={styles.heroButtonText}>{t.buy}</Text>
           </Pressable>
           <Pressable
             style={[styles.heroButton, styles.heroButtonAlt]}
             onPress={() => router.push('/rent')}
           >
-            <Ionicons name="calendar-outline" size={18} color={colors.primary} />
+            <Ionicons name="calendar-outline" size={18} color={colors.lime} />
             <Text style={[styles.heroButtonText, styles.heroButtonTextAlt]}>{t.rent}</Text>
           </Pressable>
         </View>
@@ -93,14 +93,15 @@ const styles = StyleSheet.create({
     paddingBottom: spacing.xxl,
   },
   hero: {
-    backgroundColor: colors.primary,
+    backgroundColor: colors.dark,
     padding: spacing.xl,
-    paddingVertical: spacing.xxl,
+    paddingBottom: spacing.xxl,
   },
   heroTitle: {
-    color: '#fff',
-    fontSize: 24,
-    fontWeight: '800',
+    color: colors.textOnDark,
+    fontSize: 28,
+    fontFamily: fonts.serif,
+    fontWeight: '700',
     marginBottom: spacing.l,
   },
   heroButtons: {
@@ -111,25 +112,28 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     gap: spacing.s,
-    backgroundColor: colors.primaryDark,
-    borderRadius: radius.m,
+    backgroundColor: colors.lime,
+    borderRadius: radius.pill,
     paddingHorizontal: spacing.xl,
     paddingVertical: spacing.m,
   },
   heroButtonAlt: {
-    backgroundColor: '#fff',
+    backgroundColor: colors.darkSoft,
+    borderWidth: 1,
+    borderColor: '#33363E',
   },
   heroButtonText: {
-    color: '#fff',
-    fontWeight: '700',
+    color: colors.dark,
+    fontWeight: '800',
     fontSize: 15,
   },
   heroButtonTextAlt: {
-    color: colors.primary,
+    color: colors.lime,
   },
   sectionTitle: {
-    fontSize: 18,
-    fontWeight: '800',
+    fontSize: 20,
+    fontFamily: fonts.serif,
+    fontWeight: '700',
     color: colors.text,
     marginTop: spacing.xl,
     marginBottom: spacing.m,

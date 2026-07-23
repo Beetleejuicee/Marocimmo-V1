@@ -491,7 +491,9 @@ export function filterListings(filters: ListingFilters): Listing[] {
       if (filters.minPrice != null && l.price < filters.minPrice) return false;
       if (filters.maxPrice != null && l.price > filters.maxPrice) return false;
       if (filters.minBedrooms != null && l.bedrooms < filters.minBedrooms) return false;
+      if (filters.minBathrooms != null && l.bathrooms < filters.minBathrooms) return false;
       if (filters.minSurface != null && l.surface < filters.minSurface) return false;
+      if (filters.maxSurface != null && l.surface > filters.maxSurface) return false;
       if (filters.query) {
         const q = filters.query.trim().toLowerCase();
         if (q.length > 0) {
@@ -513,5 +515,19 @@ export function filterListings(filters: ListingFilters): Listing[] {
 }
 
 export function formatPrice(price: number): string {
-  return `${price.toLocaleString('fr-MA').replace(/ /g, ' ')} MAD`;
+  return `MAD ${price.toLocaleString('en-US')}`;
+}
+
+export function relativeDate(iso: string, language: 'en' | 'fr'): string {
+  const days = Math.max(
+    0,
+    Math.floor((Date.now() - new Date(iso + 'T00:00:00').getTime()) / 86400000)
+  );
+  if (days === 0) return language === 'fr' ? "Aujourd'hui" : 'Today';
+  if (days === 1) return language === 'fr' ? 'Hier' : 'Yesterday';
+  if (days < 30) return language === 'fr' ? `Il y a ${days} j` : `${days} days ago`;
+  return new Date(iso).toLocaleDateString(language === 'fr' ? 'fr-FR' : 'en-GB', {
+    day: 'numeric',
+    month: 'short',
+  });
 }

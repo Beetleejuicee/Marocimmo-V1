@@ -2,7 +2,7 @@ import React, { useMemo, useState } from 'react';
 import { FlatList, StyleSheet, Text, View } from 'react-native';
 import { filterListings } from '../data/listings';
 import { useLanguage } from '../i18n/LanguageContext';
-import { colors, spacing } from '../theme';
+import { colors, fonts, spacing } from '../theme';
 import { ListingFilters, TransactionType } from '../types';
 import FilterBar from './FilterBar';
 import ListingCard from './ListingCard';
@@ -29,8 +29,15 @@ export default function ListingsScreen({ transaction, initialCity }: Props) {
         renderItem={({ item }) => <ListingCard listing={item} />}
         contentContainerStyle={styles.list}
         ListHeaderComponent={
-          <View style={styles.header}>
-            <FilterBar filters={filters} onChange={setFilters} resultCount={results.length} />
+          <View>
+            <View style={styles.hero}>
+              <Text style={styles.heroTitle}>
+                {transaction === 'buy' ? t.buyHero : t.rentHero}
+              </Text>
+            </View>
+            <View style={styles.filterWrap}>
+              <FilterBar filters={filters} onChange={setFilters} resultCount={results.length} />
+            </View>
           </View>
         }
         ListEmptyComponent={
@@ -49,10 +56,22 @@ const styles = StyleSheet.create({
     backgroundColor: colors.background,
   },
   list: {
-    padding: spacing.l,
+    paddingBottom: spacing.xxl,
   },
-  header: {
-    marginBottom: spacing.l,
+  hero: {
+    backgroundColor: colors.dark,
+    paddingHorizontal: spacing.l,
+    paddingTop: spacing.s,
+    paddingBottom: spacing.xl,
+  },
+  heroTitle: {
+    color: colors.textOnDark,
+    fontSize: 26,
+    fontFamily: fonts.serif,
+    fontWeight: '700',
+  },
+  filterWrap: {
+    padding: spacing.l,
   },
   empty: {
     padding: spacing.xxl,

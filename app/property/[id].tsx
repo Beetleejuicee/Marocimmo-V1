@@ -60,7 +60,7 @@ export default function PropertyDetailScreen() {
               <Ionicons
                 name={favorite ? 'heart' : 'heart-outline'}
                 size={24}
-                color={favorite ? colors.primary : colors.text}
+                color={favorite ? colors.danger : colors.text}
               />
             </Pressable>
           ),
@@ -168,7 +168,7 @@ export default function PropertyDetailScreen() {
                 <ContactButton
                   icon="call-outline"
                   label={t.call}
-                  color={colors.accent}
+                  color={colors.dark}
                   onPress={() => Linking.openURL(`tel:${agency.phone}`)}
                 />
                 <ContactButton
@@ -182,7 +182,7 @@ export default function PropertyDetailScreen() {
                 <ContactButton
                   icon="mail-outline"
                   label={t.email}
-                  color={colors.primary}
+                  color={colors.limeDark}
                   onPress={() =>
                     Linking.openURL(
                       `mailto:${agency.email}?subject=${encodeURIComponent(tr(listing.title))}`
@@ -201,7 +201,7 @@ export default function PropertyDetailScreen() {
 function SpecItem({ icon, label, value }: { icon: any; label: string; value: string }) {
   return (
     <View style={styles.specItem}>
-      <Ionicons name={icon} size={20} color={colors.primary} />
+      <Ionicons name={icon} size={20} color={colors.limeDark} />
       <Text style={styles.specValue}>{value}</Text>
       <Text style={styles.specLabel}>{label}</Text>
     </View>
@@ -269,7 +269,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
     top: spacing.m,
     left: spacing.m,
-    backgroundColor: colors.primary,
+    backgroundColor: colors.dark,
     borderRadius: radius.s,
     paddingHorizontal: spacing.s,
     paddingVertical: 3,
@@ -286,7 +286,7 @@ const styles = StyleSheet.create({
   price: {
     fontSize: 24,
     fontWeight: '800',
-    color: colors.primary,
+    color: colors.text,
   },
   perMonth: {
     fontSize: 15,

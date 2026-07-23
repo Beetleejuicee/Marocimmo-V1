@@ -2,6 +2,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { Tabs } from 'expo-router';
 import React from 'react';
 import { Pressable, Text } from 'react-native';
+import Logo from '../../src/components/Logo';
 import { useLanguage } from '../../src/i18n/LanguageContext';
 import { colors } from '../../src/theme';
 
@@ -15,14 +16,15 @@ function LanguageToggle() {
       style={{
         marginRight: 16,
         borderWidth: 1,
-        borderColor: colors.border,
+        borderColor: colors.darkSoft,
+        backgroundColor: colors.darkSoft,
         borderRadius: 999,
-        paddingHorizontal: 10,
-        paddingVertical: 4,
+        paddingHorizontal: 12,
+        paddingVertical: 5,
       }}
     >
-      <Text style={{ fontWeight: '700', color: colors.text, fontSize: 12 }}>
-        {language.toUpperCase()} → {next.toUpperCase()}
+      <Text style={{ fontWeight: '700', color: colors.lime, fontSize: 12 }}>
+        {next.toUpperCase()}
       </Text>
     </Pressable>
   );
@@ -33,19 +35,20 @@ export default function TabsLayout() {
   return (
     <Tabs
       screenOptions={{
-        tabBarActiveTintColor: colors.primary,
-        tabBarInactiveTintColor: colors.textMuted,
-        headerStyle: { backgroundColor: colors.card },
-        headerTitleStyle: { fontWeight: '700', color: colors.text },
+        tabBarActiveTintColor: colors.lime,
+        tabBarInactiveTintColor: colors.textOnDarkMuted,
+        headerStyle: { backgroundColor: colors.dark },
+        headerTitleStyle: { fontWeight: '700', color: colors.textOnDark },
+        headerTitleAlign: 'left',
+        headerTitle: () => <Logo />,
         headerRight: () => <LanguageToggle />,
-        tabBarStyle: { backgroundColor: colors.card },
+        tabBarStyle: { backgroundColor: colors.dark, borderTopColor: colors.darkSoft },
       }}
     >
       <Tabs.Screen
         name="index"
         options={{
           title: t.home,
-          headerTitle: t.appName,
           tabBarIcon: ({ color, size }) => <Ionicons name="home-outline" size={size} color={color} />,
         }}
       />
@@ -53,7 +56,6 @@ export default function TabsLayout() {
         name="buy"
         options={{
           title: t.buy,
-          headerTitle: t.forSale,
           tabBarIcon: ({ color, size }) => <Ionicons name="key-outline" size={size} color={color} />,
         }}
       />
@@ -61,7 +63,6 @@ export default function TabsLayout() {
         name="rent"
         options={{
           title: t.rent,
-          headerTitle: t.forRent,
           tabBarIcon: ({ color, size }) => (
             <Ionicons name="calendar-outline" size={size} color={color} />
           ),
@@ -71,7 +72,6 @@ export default function TabsLayout() {
         name="favorites"
         options={{
           title: t.favorites,
-          headerTitle: t.favorites,
           tabBarIcon: ({ color, size }) => <Ionicons name="heart-outline" size={size} color={color} />,
         }}
       />
@@ -79,7 +79,6 @@ export default function TabsLayout() {
         name="agencies"
         options={{
           title: t.agencies,
-          headerTitle: t.agenciesTitle,
           tabBarIcon: ({ color, size }) => (
             <Ionicons name="business-outline" size={size} color={color} />
           ),

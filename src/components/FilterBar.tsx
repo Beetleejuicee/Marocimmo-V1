@@ -9,7 +9,7 @@ import {
   TextInput,
   View,
 } from 'react-native';
-import { cities } from '../data/listings';
+import { cities, filterListings } from '../data/listings';
 import { useLanguage } from '../i18n/LanguageContext';
 import { colors, radius, spacing } from '../theme';
 import { ListingFilters, PropertyType } from '../types';
@@ -24,7 +24,7 @@ const PROPERTY_TYPES: PropertyType[] = [
   'office',
 ];
 
-const BEDROOM_OPTIONS = [1, 2, 3, 4, 5];
+const COUNT_OPTIONS = [1, 2, 3, 4, 5];
 
 interface Props {
   filters: ListingFilters;
@@ -42,7 +42,12 @@ export default function FilterBar({ filters, onChange, resultCount }: Props) {
     (filters.city ? 1 : 0) +
     (filters.minPrice != null ? 1 : 0) +
     (filters.maxPrice != null ? 1 : 0) +
-    (filters.minBedrooms != null ? 1 : 0);
+    (filters.minSurface != null ? 1 : 0) +
+    (filters.maxSurface != null ? 1 : 0) +
+    (filters.minBedrooms != null ? 1 : 0) +
+    (filters.minBathrooms != null ? 1 : 0);
+
+  const draftCount = filterListings(draft).length;
 
   const openModal = () => {
     setDraft(filters);
@@ -61,6 +66,8 @@ export default function FilterBar({ filters, onChange, resultCount }: Props) {
     setModalVisible(false);
   };
 
+  const numericInput = (v: string) => (v ? Number(v.replace(/\D/g, '')) : undefined);
+
   return (
     <View>
       <View style={styles.row}>
@@ -75,7 +82,7 @@ export default function FilterBar({ filters, onChange, resultCount }: Props) {
           />
         </View>
         <Pressable style={styles.filterButton} onPress={openModal}>
-          <Ionicons name="options-outline" size={20} color="#fff" />
+          <Ionicons name="options-outline" size={20} color={colors.dark} />
           {activeCount > 0 && (
             <View style={styles.filterCount}>
               <Text style={styles.filterCountText}>{activeCount}</Text>
@@ -84,7 +91,7 @@ export default function FilterBar({ filters, onChange, resultCount }: Props) {
         </Pressable>
       </View>
       <Text style={styles.resultCount}>
-        {resultCount} {t.resultsFound}
+        <Text style={styles.resultCountStrong}>{resultCount}</Text> {t.resultsFound}
       </Text>
 
       <Modal visible={modalVisible} animationType="slide" transparent>
@@ -132,27 +139,44 @@ export default function FilterBar({ filters, onChange, resultCount }: Props) {
               </View>
 
               <Text style={styles.sectionLabel}>{t.price} (MAD)</Text>
-              <View style={styles.priceRow}>
+              <View style={styles.inputRow}>
                 <TextInput
-                  style={styles.priceInput}
+                  style={styles.input}
                   placeholder={t.minPrice}
                   placeholderTextColor={colors.textMuted}
                   keyboardType="numeric"
                   value={draft.minPrice != null ? String(draft.minPrice) : ''}
-                  onChangeText={(v) =>
-                    setDraft({ ...draft, minPrice: v ? Number(v.replace(/\D/g, '')) : undefined })
-                  }
+                  onChangeText={(v) => setDraft({ ...draft, minPrice: numericInput(v) })}
                 />
-                <Text style={styles.priceDash}>—</Text>
+                <Text style={styles.inputDash}>—</Text>
                 <TextInput
-                  style={styles.priceInput}
+                  style={styles.input}
                   placeholder={t.maxPrice}
                   placeholderTextColor={colors.textMuted}
                   keyboardType="numeric"
                   value={draft.maxPrice != null ? String(draft.maxPrice) : ''}
-                  onChangeText={(v) =>
-                    setDraft({ ...draft, maxPrice: v ? Number(v.replace(/\D/g, '')) : undefined })
-                  }
+                  onChangeText={(v) => setDraft({ ...draft, maxPrice: numericInput(v) })}
+                />
+              </View>
+
+              <Text style={styles.sectionLabel}>{t.area}</Text>
+              <View style={styles.inputRow}>
+                <TextInput
+                  style={styles.input}
+                  placeholder={t.min}
+                  placeholderTextColor={colors.textMuted}
+                  keyboardType="numeric"
+                  value={draft.minSurface != null ? String(draft.minSurface) : ''}
+                  onChangeText={(v) => setDraft({ ...draft, minSurface: numericInput(v) })}
+                />
+                <Text style={styles.inputDash}>—</Text>
+                <TextInput
+                  style={styles.input}
+                  placeholder={t.max}
+                  placeholderTextColor={colors.textMuted}
+                  keyboardType="numeric"
+                  value={draft.maxSurface != null ? String(draft.maxSurface) : ''}
+                  onChangeText={(v) => setDraft({ ...draft, maxSurface: numericInput(v) })}
                 />
               </View>
 
@@ -163,12 +187,29 @@ export default function FilterBar({ filters, onChange, resultCount }: Props) {
                   selected={draft.minBedrooms == null}
                   onPress={() => setDraft({ ...draft, minBedrooms: undefined })}
                 />
-                {BEDROOM_OPTIONS.map((n) => (
+                {COUNT_OPTIONS.map((n) => (
                   <Chip
                     key={n}
                     label={`${n}+`}
                     selected={draft.minBedrooms === n}
                     onPress={() => setDraft({ ...draft, minBedrooms: n })}
+                  />
+                ))}
+              </View>
+
+              <Text style={styles.sectionLabel}>{t.bathrooms}</Text>
+              <View style={[styles.chipWrap, styles.lastSection]}>
+                <Chip
+                  label={t.any}
+                  selected={draft.minBathrooms == null}
+                  onPress={() => setDraft({ ...draft, minBathrooms: undefined })}
+                />
+                {COUNT_OPTIONS.map((n) => (
+                  <Chip
+                    key={n}
+                    label={`${n}+`}
+                    selected={draft.minBathrooms === n}
+                    onPress={() => setDraft({ ...draft, minBathrooms: n })}
                   />
                 ))}
               </View>
@@ -178,7 +219,9 @@ export default function FilterBar({ filters, onChange, resultCount }: Props) {
                 <Text style={styles.resetText}>{t.reset}</Text>
               </Pressable>
               <Pressable style={styles.applyButton} onPress={apply}>
-                <Text style={styles.applyText}>{t.apply}</Text>
+                <Text style={styles.applyText}>
+                  {t.apply} ({draftCount})
+                </Text>
               </Pressable>
             </View>
           </View>
@@ -215,10 +258,10 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     backgroundColor: colors.card,
-    borderRadius: radius.m,
+    borderRadius: radius.pill,
     borderWidth: 1,
     borderColor: colors.border,
-    paddingHorizontal: spacing.m,
+    paddingHorizontal: spacing.l,
     height: 44,
     gap: spacing.s,
   },
@@ -228,8 +271,8 @@ const styles = StyleSheet.create({
     color: colors.text,
   },
   filterButton: {
-    backgroundColor: colors.primary,
-    borderRadius: radius.m,
+    backgroundColor: colors.lime,
+    borderRadius: radius.pill,
     height: 44,
     width: 44,
     alignItems: 'center',
@@ -239,7 +282,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
     top: -4,
     right: -4,
-    backgroundColor: colors.accent,
+    backgroundColor: colors.dark,
     borderRadius: radius.pill,
     minWidth: 18,
     height: 18,
@@ -257,9 +300,13 @@ const styles = StyleSheet.create({
     fontSize: 13,
     color: colors.textMuted,
   },
+  resultCountStrong: {
+    fontWeight: '800',
+    color: colors.text,
+  },
   modalOverlay: {
     flex: 1,
-    backgroundColor: 'rgba(0,0,0,0.4)',
+    backgroundColor: 'rgba(0,0,0,0.45)',
     justifyContent: 'flex-end',
   },
   modalSheet: {
@@ -285,11 +332,16 @@ const styles = StyleSheet.create({
     paddingHorizontal: spacing.l,
   },
   sectionLabel: {
-    fontSize: 14,
+    fontSize: 12,
     fontWeight: '700',
-    color: colors.text,
+    color: colors.textMuted,
+    textTransform: 'uppercase',
+    letterSpacing: 0.6,
     marginTop: spacing.l,
     marginBottom: spacing.s,
+  },
+  lastSection: {
+    marginBottom: spacing.xl,
   },
   chipWrap: {
     flexDirection: 'row',
@@ -305,23 +357,23 @@ const styles = StyleSheet.create({
     paddingVertical: 6,
   },
   chipSelected: {
-    backgroundColor: colors.primary,
-    borderColor: colors.primary,
+    backgroundColor: colors.dark,
+    borderColor: colors.dark,
   },
   chipText: {
     fontSize: 13,
     color: colors.text,
   },
   chipTextSelected: {
-    color: '#fff',
-    fontWeight: '600',
+    color: colors.lime,
+    fontWeight: '700',
   },
-  priceRow: {
+  inputRow: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: spacing.s,
   },
-  priceInput: {
+  input: {
     flex: 1,
     backgroundColor: colors.card,
     borderWidth: 1,
@@ -332,7 +384,7 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: colors.text,
   },
-  priceDash: {
+  inputDash: {
     color: colors.textMuted,
   },
   modalFooter: {
@@ -345,7 +397,7 @@ const styles = StyleSheet.create({
   resetButton: {
     flex: 1,
     height: 48,
-    borderRadius: radius.m,
+    borderRadius: radius.pill,
     borderWidth: 1,
     borderColor: colors.border,
     alignItems: 'center',
@@ -360,8 +412,8 @@ const styles = StyleSheet.create({
   applyButton: {
     flex: 2,
     height: 48,
-    borderRadius: radius.m,
-    backgroundColor: colors.primary,
+    borderRadius: radius.pill,
+    backgroundColor: colors.dark,
     alignItems: 'center',
     justifyContent: 'center',
   },

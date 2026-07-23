@@ -54,7 +54,7 @@ export default function AgencyDetailScreen() {
                 <ContactButton
                   icon="call-outline"
                   label={t.call}
-                  color={colors.accent}
+                  color={colors.dark}
                   onPress={() => Linking.openURL(`tel:${agency.phone}`)}
                 />
                 <ContactButton
@@ -68,7 +68,7 @@ export default function AgencyDetailScreen() {
                 <ContactButton
                   icon="mail-outline"
                   label={t.email}
-                  color={colors.primary}
+                  color={colors.limeDark}
                   onPress={() => Linking.openURL(`mailto:${agency.email}`)}
                 />
               </View>

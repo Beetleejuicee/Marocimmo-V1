@@ -1,15 +1,27 @@
+import { Platform } from 'react-native';
+
 export const colors = {
-  primary: '#C0392B',
-  primaryDark: '#96281B',
-  primaryLight: '#FDEDEC',
-  accent: '#1F618D',
-  background: '#F8F6F4',
+  // Brand
+  dark: '#17181C',
+  darkSoft: '#22242A',
+  lime: '#A8E92A',
+  limeDark: '#7CBF13',
+  // Surfaces
+  background: '#F5F5F3',
   card: '#FFFFFF',
-  text: '#1C2833',
+  // Text
+  text: '#17181C',
   textMuted: '#6B7280',
-  border: '#E5E1DC',
+  textOnDark: '#FFFFFF',
+  textOnDarkMuted: '#9CA3AF',
+  // Misc
+  border: '#E7E7E4',
   success: '#1E8449',
-  gold: '#B7950B',
+  danger: '#E0245E',
+};
+
+export const fonts = {
+  serif: Platform.select({ ios: 'Georgia', android: 'serif', default: 'Georgia, serif' }),
 };
 
 export const spacing = {

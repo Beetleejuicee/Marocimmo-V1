@@ -3,20 +3,32 @@ import { FlatList, StyleSheet, Text, View } from 'react-native';
 import { filterListings } from '../data/listings';
 import { useLanguage } from '../i18n/LanguageContext';
 import { colors, fonts, spacing } from '../theme';
-import { ListingFilters, TransactionType } from '../types';
+import { ListingFilters, PropertyType, TransactionType } from '../types';
 import FilterBar from './FilterBar';
 import ListingCard from './ListingCard';
 
 interface Props {
   transaction: TransactionType;
   initialCity?: string;
+  initialType?: PropertyType;
+  initialQuery?: string;
+  initialMaxPrice?: number;
 }
 
-export default function ListingsScreen({ transaction, initialCity }: Props) {
+export default function ListingsScreen({
+  transaction,
+  initialCity,
+  initialType,
+  initialQuery,
+  initialMaxPrice,
+}: Props) {
   const { t } = useLanguage();
   const [filters, setFilters] = useState<ListingFilters>({
     transaction,
     city: initialCity,
+    type: initialType,
+    query: initialQuery,
+    maxPrice: initialMaxPrice,
   });
 
   const results = useMemo(() => filterListings({ ...filters, transaction }), [filters, transaction]);

@@ -35,7 +35,9 @@ export default function ListingCard({ listing, compact }: Props) {
           transition={200}
         />
         <View style={styles.typeBadge}>
-          <Text style={styles.typeBadgeText}>{t.types[listing.type]}</Text>
+          <Text style={styles.typeBadgeText}>
+            {listing.transaction === 'buy' ? t.forSale : t.forRent} · {t.types[listing.type]}
+          </Text>
         </View>
         <Pressable
           style={styles.heart}

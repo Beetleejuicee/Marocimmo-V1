@@ -26,6 +26,9 @@
       "bundler": "metro",
       "output": "single"
     },
+    "experiments": {
+      "baseUrl": "/Marocimmo-V1"
+    },
     "plugins": [
       "expo-router",
       [

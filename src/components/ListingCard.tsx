@@ -27,7 +27,7 @@ export default function ListingCard({ listing, compact }: Props) {
       style={[styles.card, compact && styles.cardCompact]}
       onPress={() => router.push(`/property/${listing.id}`)}
     >
-      <View>
+      <View style={styles.photoWrap}>
         <Image
           source={{ uri: listing.photos[0] }}
           style={[styles.photo, compact && styles.photoCompact]}
@@ -128,18 +128,23 @@ const styles = StyleSheet.create({
     marginRight: spacing.m,
     marginBottom: 0,
   },
+  photoWrap: {
+    padding: spacing.s,
+    paddingBottom: 0,
+  },
   photo: {
     width: '100%',
     height: 200,
     backgroundColor: colors.border,
+    borderRadius: radius.m,
   },
   photoCompact: {
     height: 150,
   },
   typeBadge: {
     position: 'absolute',
-    top: spacing.m,
-    left: spacing.m,
+    top: spacing.l,
+    left: spacing.l,
     backgroundColor: '#fff',
     borderRadius: radius.pill,
     paddingHorizontal: spacing.m,
@@ -152,8 +157,8 @@ const styles = StyleSheet.create({
   },
   heart: {
     position: 'absolute',
-    top: spacing.m,
-    right: spacing.m,
+    top: spacing.l,
+    right: spacing.l,
     backgroundColor: '#fff',
     borderRadius: radius.pill,
     padding: 7,
